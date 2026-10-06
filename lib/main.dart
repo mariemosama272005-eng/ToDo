@@ -10,6 +10,7 @@ void main() async{
   await EasyLocalization.ensureInitialized();
    await Hive.initFlutter();
    Hive.registerAdapter(UserModelAdapter());
+  await Hive.openBox<UserModel>("UserBox");
   runApp(EasyLocalization(
     supportedLocales: [Locale('en'), Locale('ar')],
       path: 'assets/translations', 

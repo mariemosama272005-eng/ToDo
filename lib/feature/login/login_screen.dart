@@ -3,9 +3,14 @@ import 'package:flutter/foundation.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:to_do_app/core/utils/app_constans.dart';
 import 'package:to_do_app/core/wedgit/button_wedgit.dart';
+import 'package:to_do_app/core/wedgit/costum_trextFeild.dart';
 import 'package:to_do_app/feature/home/home_screen.dart';
+import 'package:to_do_app/feature/login/data/user_model.dart';
+import 'package:to_do_app/models/customTextfield_model.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -31,6 +36,20 @@ class _LoginScreenState extends State<LoginScreen> {
      
    });
   }
+  SaveUserData(UserModel user){
+    Hive.box<UserModel>(AppConstans.userBox).put(AppConstans.curruntUser,user).then((value) {
+      Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  );
+      
+    },).catchError((error){
+      print(error);
+
+    }
+    );
+  }
+  var nameController=TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -93,38 +112,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Text("sub".tr(), style: TextStyle(fontSize: 16)),
-              Padding(
-                padding: const EdgeInsets.all(25.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Ahmed Abdelsattar',
-                    hintStyle: const TextStyle(
-                      fontSize: 28,
-                      color: Color(0xff5A5B65),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 40,
-                      vertical: 35,
-                    ),
-
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(45.r),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
-              ),
-
-              20.verticalSpace,
+              CostumTextfeild(tf:CustomTextFieldModel( controller: nameController,title: 'ahmed abdsatar') ),
+                     20.verticalSpace,
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  );
+                  SaveUserData(UserModel(name: nameController.text, image: photo?.path??""));
                 },
                 child: ButtonWedgit(title: 'continue'),
               ),
