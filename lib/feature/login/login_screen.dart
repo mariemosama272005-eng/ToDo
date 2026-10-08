@@ -22,45 +22,42 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final picker = ImagePicker();
   XFile? photo;
- 
+
   PickImageFromCarmera() async {
     photo = await picker.pickImage(source: ImageSource.camera);
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
   PickImageFromGallery() async {
-   photo= await picker.pickImage(source: ImageSource.gallery);
-   setState(() {
-     
-   });
+    photo = await picker.pickImage(source: ImageSource.gallery);
+    setState(() {});
   }
-  SaveUserData(UserModel user){
-    Hive.box<UserModel>(AppConstans.userBox).put(AppConstans.curruntUser,user).then((value) {
-      Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  );
-      
-    },).catchError((error){
-      print(error);
 
-    }
-    );
+  SaveUserData(UserModel user) {
+    Hive.box<UserModel>(AppConstans.userBox)
+        .put(AppConstans.curruntUser, user)
+        .then((value) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
+        })
+        .catchError((error) {
+          print(error);
+        });
   }
-  var nameController=TextEditingController();
+
+  var nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title:Text( "login".tr()),
+        actions: [
+          IconButton(
                 onPressed: () {
                   if (context.locale.languageCode == 'en') {
                     context.setLocale(Locale("ar"));
@@ -70,6 +67,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 icon: Icon(Icons.language),
               ),
+        ],
+      ),
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              
 
               InkWell(
                 onTap: () {
@@ -79,18 +84,18 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         ButtonWedgit(
                           title: 'camera',
-                          onTap: (){ 
+                          onTap: () {
                             Navigator.pop(context);
                             PickImageFromCarmera();
-                            },
+                          },
                         ),
 
                         ButtonWedgit(
                           title: 'gallery',
-                          onTap: () { 
+                          onTap: () {
                             Navigator.pop(context);
-                             PickImageFromGallery();
-                             }
+                            PickImageFromGallery();
+                          },
                         ),
                       ],
                     )),
@@ -99,24 +104,60 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: CircleAvatar(
                   radius: 60,
                   backgroundColor: Colors.grey.shade100,
-                  child: photo == null? Icon(Icons.person, color: Color(0xff5865A3), size: 60): null,
-    backgroundImage: photo!=null?
-    kIsWeb
-        ? Image.network(photo!.path).image
-        : Image.file(File(photo!.path)).image:null), 
+                  child: photo == null
+                      ? Icon(Icons.person, color: Color(0xff5865A3), size: 60)
+                      : null,
+                  backgroundImage: photo != null
+                      ? kIsWeb
+                            ? Image.network(photo!.path).image
+                            : Image.file(File(photo!.path)).image
+                      : null,
                 ),
-              
+              ),
+
               20.verticalSpace,
               Text(
                 "create".tr(),
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Text("sub".tr(), style: TextStyle(fontSize: 16)),
-              CostumTextfeild(tf:CustomTextFieldModel( controller: nameController,title: 'ahmed abdsatar') ),
-                     20.verticalSpace,
+              CostumTextfeild(
+                tf: CustomTextFieldModel(
+                  controller: nameController,
+                  title: 'ahmed abdsatar',
+                ),
+              ),
+              20.verticalSpace,
               GestureDetector(
                 onTap: () {
-                  SaveUserData(UserModel(name: nameController.text, image: photo?.path??""));
+                  if (photo == null) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text("error".tr()),
+                        content: Text("image".tr()),
+                      ),
+                    );
+                    return;
+                  }
+                  if (nameController.text.trim().isEmpty) {
+                    showDialog(
+                      
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text("error".tr()),
+                        content: Text("namereq".tr()),
+                      ),
+                    );
+                    return;
+                  }
+
+                  SaveUserData(
+                    UserModel(
+                      name: nameController.text,
+                      image: photo?.path ?? "",
+                    ),
+                  );
                 },
                 child: ButtonWedgit(title: 'continue'),
               ),

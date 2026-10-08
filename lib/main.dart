@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:to_do_app/core/data/sharedTask_model.dart';
 import 'package:to_do_app/feature/login/data/user_model.dart';
 import 'package:to_do_app/toDo_app.dart';
 
@@ -10,7 +11,9 @@ void main() async{
   await EasyLocalization.ensureInitialized();
    await Hive.initFlutter();
    Hive.registerAdapter(UserModelAdapter());
+   Hive.registerAdapter(SharedtaskModelAdapter());
   await Hive.openBox<UserModel>("UserBox");
+   await Hive.openBox<SharedtaskModel>("TaskBox");
   runApp(EasyLocalization(
     supportedLocales: [Locale('en'), Locale('ar')],
       path: 'assets/translations', 

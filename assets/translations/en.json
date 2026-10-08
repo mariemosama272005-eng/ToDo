@@ -4,6 +4,11 @@
     "name":"Full name",
     "continue":"Continue",
     "camera":"Camera",
-    "gallery":"Gallery"
+    "gallery":"Gallery",
+    "login":"Login",
+    "error":"Error",
+    "image":"image is required",
+    "namereq":"please enter your name"
+
 
 }

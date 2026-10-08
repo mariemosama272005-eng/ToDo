@@ -24,15 +24,18 @@ class HomeAppbar extends StatelessWidget {
                 
           
       20.horizontalSpace,
-          Column(
-            children: [
-              Text("Good Morning👋🏻",style: TextStyle(
-                color: Colors.grey,
-              ),
-              ),
-              Text(user?.name??""),
-            ],
+          Expanded(
+            child: Column(
+              children: [
+                Text("Good Morning👋🏻",style: TextStyle(
+                  color: Colors.grey,
+                ),
+                ),
+                Text(user?.name??""),
+              ],
+            ),
           ),
+          
           Spacer(),
           Icon(Icons.notifications_none_outlined,size: 30,)
         ],

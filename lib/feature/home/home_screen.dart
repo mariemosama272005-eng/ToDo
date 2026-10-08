@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:to_do_app/core/data/sharedTask_model.dart';
 import 'package:to_do_app/core/utils/app_constans.dart';
 import 'package:to_do_app/feature/addTask/addTask_screen.dart';
 import 'package:to_do_app/feature/home/wedgit/columnNum_wedgit.dart';
@@ -8,7 +9,7 @@ import 'package:to_do_app/feature/home/wedgit/home_appBar.dart';
 import 'package:to_do_app/feature/home/wedgit/taskCard_wedgit.dart';
 import 'package:to_do_app/feature/login/data/user_model.dart';
 import 'package:to_do_app/models/cloumnN_model.dart';
-import 'package:to_do_app/models/taskCard_model.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,9 +23,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<SharedtaskModel>tasks=Hive.box<SharedtaskModel>(AppConstans.taskBox).values.toList();
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(onPressed: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>AddtaskScreen()));
+      floatingActionButton: FloatingActionButton.extended(onPressed: ()async{
+       await Navigator.push(context, MaterialPageRoute(builder: (context)=>AddtaskScreen()));
+       setState(() {
+         
+       });
       }, label: Row(
         children: [
           Icon(Icons.add),
@@ -70,9 +75,30 @@ Container(
               ),
               ),
              
-             Expanded(child: ListView.separated(itemBuilder: ((context, index) => tasks[index]), separatorBuilder: (context,index)=>10.verticalSpace, itemCount: 4)),
+             Expanded(
+                    child: tasks.isEmpty
+                        ? const Center(
+                            child: Text(
+                              "No tasks yet",
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          )
+                        : ListView.separated(
+                            itemBuilder: (context, index) {
+                              return TaskcardWedgit(
+                                task: tasks[index],
+                              );
+                            },
 
-            
+                            separatorBuilder: (context, index) {
+                              return 10.verticalSpace;
+                            },
+
+                            itemCount: tasks.length,
+                          ),
+             ),
               
             ],
           
@@ -82,10 +108,3 @@ Container(
     );
   }
 }
-List<TaskcardWedgit>tasks=[
-     TaskcardWedgit(tm: TaskcardModel(color: 0xffADD8E6, description: "bulid Register screen", title: "flutter task", status: "pending")),
-     TaskcardWedgit(tm: TaskcardModel(color: 0xff90EE90, description: "GYM at 6 am", title: "Work out", status: "done")),
-     TaskcardWedgit(tm: TaskcardModel(color: 0xffFFA500, description: "Team sync", title: "Meeting", status: "in progress")),
-     TaskcardWedgit(tm: TaskcardModel(color: 0xffEE82EE, description: "atomic habits", title: "raed a book", status: "pending")),
-
-];

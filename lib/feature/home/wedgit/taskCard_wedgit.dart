@@ -2,13 +2,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:to_do_app/models/taskCard_model.dart';
+import 'package:to_do_app/core/data/sharedTask_model.dart';
 
 class TaskcardWedgit extends StatelessWidget {
-  TaskcardModel tm;
+  SharedtaskModel? task;
   TaskcardWedgit({
     Key? key,
-    required this.tm,
+    required this.task,
   }) : super(key: key);
 
   @override
@@ -24,7 +24,7 @@ class TaskcardWedgit extends StatelessWidget {
               height: 80.h,
               width: 20.w,
               decoration: BoxDecoration(
-                color: Color(tm.color),
+                color: Color(task!.color),
                 borderRadius: BorderRadius.circular(30),
 
 
@@ -33,14 +33,14 @@ class TaskcardWedgit extends StatelessWidget {
            20.horizontalSpace,
               Column(
                 children: [
-                  Text(tm.title,style: TextStyle(
+                  Text(task?.title??"",style: TextStyle(
                     fontSize: 24,
                     fontWeight:FontWeight.bold,
               
                   ),
                   ),
                   
-                  Text(tm.description,style: TextStyle(
+                  Text(task!.description,style: TextStyle(
                     fontSize: 16,
                     color: Colors.grey,
               
@@ -52,15 +52,15 @@ class TaskcardWedgit extends StatelessWidget {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
-                      color: Color(tm.color),
+                      color: Color(task!.color).withValues(alpha: .1),
 
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Text(tm.status,style: TextStyle(
+                      child: Text(task?.status??"",style: TextStyle(
                         fontSize: 20,
                         
-                        color: Colors.white,
+                        color:Color(task!.color),
                                     
                       ),
                       ),
